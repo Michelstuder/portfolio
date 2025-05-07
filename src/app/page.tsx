@@ -1,7 +1,9 @@
+import { shantell } from "./fonts";
+
 export default function Home() {
   return (
     <main className="flex min-h-screen items-center justify-center">
-      <h1 className="text-4xl">hello</h1>
+      <div className="text-9xl" style={shantell.style}>Michel Studer</div>
     </main>
   );
 }
