@@ -11,7 +11,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <body
-        className="antialiased bg-surface text-foreground max-w-5xl mx-auto min-h-screen px-4"
+        className="antialiased bg-surface text-foreground max-w-[7xl] mx-auto min-h-screen px-4"
         style={roboto.style}
       >
         {children}
