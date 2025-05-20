@@ -1,25 +1,25 @@
-import * as THREE from 'three';
-import { useEffect, useRef, useState } from 'react';
-import { useFrame, ReactThreeFiber, extend } from '@react-three/fiber';
-import { useGLTF, useTexture } from '@react-three/drei';
+import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
+import { useFrame, extend } from "@react-three/fiber";
+import { useGLTF, useTexture } from "@react-three/drei";
 import {
   BallCollider,
   CuboidCollider,
   RigidBody,
   useRopeJoint,
   useSphericalJoint,
-  RapierRigidBody
-} from '@react-three/rapier';
-import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
+  RapierRigidBody,
+} from "@react-three/rapier";
+import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
 const segmentProps = {
-  type: 'dynamic',
+  type: "dynamic",
   canSleep: true,
   colliders: false,
   angularDamping: 2,
-  linearDamping: 2
+  linearDamping: 2,
 } as const;
 
 export default function Band({ maxSpeed = 50, minSpeed = 10 }) {
@@ -37,8 +37,8 @@ export default function Band({ maxSpeed = 50, minSpeed = 10 }) {
   const [dragged, drag] = useState<THREE.Vector3 | false>(false);
   const [hovered, hover] = useState(false);
 
-  const { nodes, materials } = useGLTF('/assets/3d/card.glb');
-  const texture = useTexture('/assets/images/tag_texture.png');
+  const { nodes, materials } = useGLTF("/assets/3d/card.glb");
+  const texture = useTexture("/assets/images/tag_texture.png");
 
   const [curve] = useState(
     () =>
@@ -46,8 +46,8 @@ export default function Band({ maxSpeed = 50, minSpeed = 10 }) {
         new THREE.Vector3(),
         new THREE.Vector3(),
         new THREE.Vector3(),
-        new THREE.Vector3()
-      ])
+        new THREE.Vector3(),
+      ]),
   );
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
@@ -55,15 +55,15 @@ export default function Band({ maxSpeed = 50, minSpeed = 10 }) {
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
   useSphericalJoint(j3, card, [
     [0, 0, 0],
-    [0, 1.45, 0]
+    [0, 1.45, 0],
   ]);
 
   useEffect(() => {
     if (hovered) {
-      document.body.style.cursor = dragged ? 'grabbing' : 'grab';
-      return () => void (document.body.style.cursor = 'auto');
+      document.body.style.cursor = dragged ? "grabbing" : "grab";
+      return () => void (document.body.style.cursor = "auto");
     }
-    return () => void (document.body.style.cursor = 'auto');
+    return () => void (document.body.style.cursor = "auto");
   }, [hovered, dragged]);
 
   useFrame((state, delta) => {
@@ -81,27 +81,27 @@ export default function Band({ maxSpeed = 50, minSpeed = 10 }) {
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.copy(vec).sub(state.camera.position).normalize();
       vec.add(dir.multiplyScalar(state.camera.position.length()));
-      [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
+      [card, j1, j2, j3, fixed].forEach((ref) => ref.current?.wakeUp());
       card.current?.setNextKinematicTranslation({
         x: vec.x - dragged.x,
         y: vec.y - dragged.y,
-        z: vec.z - dragged.z
+        z: vec.z - dragged.z,
       });
     }
 
     if (fixed.current) {
-      const [j1Lerped, j2Lerped] = [j1, j2].map(ref => {
+      const [j1Lerped, j2Lerped] = [j1, j2].map((ref) => {
         if (ref.current) {
           const lerped = new THREE.Vector3().copy(ref.current.translation());
 
           const clampedDistance = Math.max(
             0.1,
-            Math.min(1, lerped.distanceTo(ref.current.translation()))
+            Math.min(1, lerped.distanceTo(ref.current.translation())),
           );
 
           return lerped.lerp(
             ref.current.translation(),
-            delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
+            delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)),
           );
         }
       });
@@ -116,12 +116,12 @@ export default function Band({ maxSpeed = 50, minSpeed = 10 }) {
       rot.copy(card.current.rotation());
       card.current.setAngvel(
         { x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z },
-        false
+        false,
       );
     }
   });
 
-  curve.curveType = 'chordal';
+  curve.curveType = "chordal";
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
   return (
@@ -142,7 +142,7 @@ export default function Band({ maxSpeed = 50, minSpeed = 10 }) {
           position={[2, 0, 0]}
           ref={card}
           {...segmentProps}
-          type={dragged ? 'kinematicPosition' : 'dynamic'}
+          type={dragged ? "kinematicPosition" : "dynamic"}
         >
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
           <group
@@ -150,17 +150,17 @@ export default function Band({ maxSpeed = 50, minSpeed = 10 }) {
             position={[0, -1.25, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
-            onPointerUp={e => (
+            onPointerUp={(e) => (
               (e.target as Element)?.releasePointerCapture(e.pointerId),
               drag(false)
             )}
-            onPointerDown={e => (
+            onPointerDown={(e) => (
               (e.target as Element)?.setPointerCapture(e.pointerId),
               card.current &&
                 drag(
                   new THREE.Vector3()
                     .copy(e.point)
-                    .sub(vec.copy(card.current.translation()))
+                    .sub(vec.copy(card.current.translation())),
                 )
             )}
           >
