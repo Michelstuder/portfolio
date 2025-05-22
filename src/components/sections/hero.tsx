@@ -16,19 +16,19 @@ useTexture.preload("/assets/images/tag_texture.png");
 
 export default function Hero() {
   return (
-    <div className="container relative mx-auto flex min-h-screen items-center justify-between px-4">
+    <div className="container relative mx-auto flex min-h-screen items-center px-4">
       {/* Text Content */}
-      <div className="z-10 max-w-3xl">
-        <h1 className="mb-6 text-7xl font-extrabold leading-tight tracking-tight md:text-8xl">
+      <div className="z-10 max-w-4xl">
+        <h1 className="mb-8 text-[8.5rem] font-extrabold leading-[1.1] tracking-tight">
           Michel Studer
         </h1>
-        <h2 className="text-2xl font-light text-gray-300 md:text-3xl">
+        <h2 className="text-4xl font-light text-gray-300">
           Software Developer & Web3 Enthusiast
         </h2>
       </div>
 
       {/* 3D Card */}
-      <div className="absolute right-0 top-1/2 z-20 h-[600px] w-[600px] -translate-y-1/2 cursor-grab transition-transform hover:scale-105 active:cursor-grabbing">
+      <div className="absolute right-0 top-1/2 z-20 h-[800px] w-[800px] -translate-y-1/2 cursor-grab transition-all duration-300 hover:scale-105 hover:z-30 active:cursor-grabbing">
         <Canvas
           camera={{ position: [0, 0, 13], fov: 25 }}
           style={{ background: "transparent" }}
